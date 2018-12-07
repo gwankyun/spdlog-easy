@@ -28,4 +28,4 @@ namespace spdlog
 
 
 #define INFO(logger, ...) \
-	info(logger, __func__, __LINE__, __VA_ARGS__);
+	spdlog::easy::info(logger, __func__, __LINE__, __VA_ARGS__);
