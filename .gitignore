@@ -30,3 +30,12 @@
 *.exe
 *.out
 *.app
+
+/Debug
+/x64
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+main.cpp
+pch.h
+pch.cpp
