@@ -14,7 +14,7 @@ namespace spdlog
 			{
 				return;
 			}
-			auto fmts = fmt::format("({0}:{1}) ", func, line) + f;
+			auto fmts = fmt::format("[{0}:{1}] ", func, line) + f;
 			log->info(fmts.c_str(), arg, forward<Args>(args)...);
 		}
 
@@ -38,7 +38,7 @@ namespace spdlog
 			{
 				return;
 			}
-			auto fmts = fmt::format("({0}:{1}) ", func, line) + f;
+			auto fmts = fmt::format("[{0}:{1}] ", func, line) + f;
 			log->error(fmts.c_str(), arg, forward<Args>(args)...);
 		}
 
