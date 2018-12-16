@@ -57,7 +57,7 @@ namespace spdlog
 
 
 #define INFO(logger, ...) \
-	spdlog::easy::info(logger, __func__, __LINE__, __VA_ARGS__);
+	spdlog::easy::info(logger, __func__, __LINE__, ##__VA_ARGS__);
 
 #define ERROR(logger, ...) \
-	spdlog::easy::error(logger, __func__, __LINE__, __VA_ARGS__);
+	spdlog::easy::error(logger, __func__, __LINE__, ##__VA_ARGS__);
