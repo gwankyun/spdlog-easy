@@ -52,6 +52,30 @@ namespace spdlog
 		{
 			error(logger, func, line, "{0}", "");
 		}
+
+		template<typename Arg, typename ...Args>
+		void warn(std::string logger, std::string func, std::size_t line, std::string f, Arg arg, Args&& ...args)
+		{
+			using namespace std;
+			auto log = spdlog::get(logger);
+			if (log == nullptr)
+			{
+				return;
+			}
+			auto fmts = fmt::format("[{0}:{1}] ", func, line) + f;
+			log->warn(fmts.c_str(), arg, forward<Args>(args)...);
+		}
+
+		template<typename T>
+		void warn(std::string logger, std::string func, std::size_t line, T t)
+		{
+			warn(logger, func, line, "{0}", t);
+		}
+
+		inline void warn(std::string logger, std::string func, std::size_t line)
+		{
+			warn(logger, func, line, "{0}", "");
+		}
 	}
 }
 
@@ -61,3 +85,6 @@ namespace spdlog
 
 #define ERROR(logger, ...) \
 	spdlog::easy::error(logger, __func__, __LINE__, ##__VA_ARGS__);
+
+#define WARN(logger, ...) \
+	spdlog::easy::warn(logger, __func__, __LINE__, ##__VA_ARGS__);
