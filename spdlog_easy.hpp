@@ -1,6 +1,5 @@
 #pragma once
 #include <spdlog/spdlog.h>
-#include <functional>
 
 namespace spdlog
 {
@@ -46,3 +45,9 @@ namespace spdlog
 
 #define LOG_CRITICAL(logger, ...) \
 	LOG(spdlog::level::level_enum::critical, logger, ##__VA_ARGS__);
+
+#define LOG_DEBUG(logger, ...) \
+	LOG(spdlog::level::level_enum::debug, logger, ##__VA_ARGS__);
+
+#define LOG_TRACE(logger, ...) \
+	LOG(spdlog::level::level_enum::trace, logger, ##__VA_ARGS__);
