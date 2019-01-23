@@ -2,11 +2,13 @@
 #include <spdlog/spdlog.h>
 #include <string>
 #include <vector>
+#include <set>
 
 namespace spdlog
 {
     namespace easy
     {
+        std::string logger;
         template<typename Arg, typename ...Args>
         void log(spdlog::level::level_enum level, std::string logger, std::string func, std::size_t line, std::string f, Arg arg, Args&& ...args)
         {
@@ -16,7 +18,8 @@ namespace spdlog
             {
                 return;
             }
-            auto fmts = fmt::format("[{0}:{1}] ", func, line) + f;
+            string str(func_guard_t::call_level, '=');
+            auto fmts = fmt::format("[{0}{1}:{2}] ", str, func, line) + f;
             logg->log(level, fmts.c_str(), arg, forward<Args>(args)...);
         }
 
@@ -73,7 +76,7 @@ namespace spdlog
 #define LOG_INFO(logger, ...) \
 	LOG(spdlog::level::level_enum::info, logger, ##__VA_ARGS__);
 
-#define LOG_ERROR(logger, ...) \
+#define LOGGER_ERROR(logger, ...) \
 	LOG(spdlog::level::level_enum::err, logger, ##__VA_ARGS__);
 
 #define LOG_WARN(logger, ...) \
@@ -82,11 +85,17 @@ namespace spdlog
 #define LOG_CRITICAL(logger, ...) \
 	LOG(spdlog::level::level_enum::critical, logger, ##__VA_ARGS__);
 
-#define LOG_DEBUG(logger, ...) \
+#define LOGGER_DEBUG(logger, ...) \
 	LOG(spdlog::level::level_enum::debug, logger, ##__VA_ARGS__);
 
-#define LOG_TRACE(logger, ...) \
+#define LOG_DEBUG(...) \
+    LOGGER_DEBUG("log", ##__VA_ARGS__)
+
+#define LOGGER_TRACE(logger, ...) \
 	LOG(spdlog::level::level_enum::trace, logger, ##__VA_ARGS__);
+
+#define LOG_TRACE(...) \
+    LOGGER_TRACE("log", ##__VA_ARGS__)
 
 int spdlog::easy::func_guard_t::call_level = 0;
 
