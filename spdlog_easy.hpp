@@ -1,4 +1,6 @@
 #pragma once
+#ifndef SPDLOG_EASY
+#define SPDLOG_EASY
 #include <spdlog/spdlog.h>
 #include <string>
 #include <cstddef>
@@ -6,8 +8,8 @@
 
 namespace spdlog
 {
-    namespace easy
-    {
+	namespace easy
+	{
 		template<typename Arg, typename ...Args>
 		void log(spdlog::level::level_enum level, std::string file, std::string func, std::size_t line, std::string f, Arg arg, Args&& ...args)
 		{
@@ -31,8 +33,10 @@ namespace spdlog
 		{
 			log(level, file, func, line, "{0}", "");
 		}
-    }
+	}
 }
 
 #define LOG(_level, ...) \
 	spdlog::easy::log(spdlog::level::_level, __FILE__,  __func__, __LINE__, ##__VA_ARGS__)
+
+#endif // !SPDLOG_EASY
