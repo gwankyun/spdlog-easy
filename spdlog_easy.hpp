@@ -7,20 +7,33 @@
 
 #ifdef __cpp_lib_filesystem
 #include <filesystem>
-#endif
+#endif // __cpp_lib_filesystem
 
 namespace spdlog
 {
 	namespace easy
 	{
-		std::string get_filename(std::string file)
+		inline char get_path_separator()
+		{
+#ifdef _WIN32
+			return '\\';
+#else
+			return '/';
+#endif // _WIN32
+		}
+
+		inline std::string get_filename(std::string file)
 		{
 			using namespace std;
 #ifdef __cpp_lib_filesystem
 			return filesystem::path(file).filename().string();
-#elif BOOST_FILESYSTEM_FILESYSTEM_HPP
+#endif // __cpp_lib_filesystem
+
+#ifdef BOOST_FILESYSTEM_FILESYSTEM_HPP
 			return boost::filesystem::path(file).filename().string();
-#endif
+#endif // BOOST_FILESYSTEM_FILESYSTEM_HPP
+
+			return file.substr(file.rfind(get_path_separator()) + 1);
 		}
 
 		template<typename Arg, typename ...Args>
