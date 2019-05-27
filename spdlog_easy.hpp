@@ -4,19 +4,32 @@
 #include <spdlog/spdlog.h>
 #include <string>
 #include <cstddef>
+
+#ifdef __cpp_lib_filesystem
 #include <filesystem>
+#endif
 
 namespace spdlog
 {
 	namespace easy
 	{
+		std::string get_filename(std::string file)
+		{
+			using namespace std;
+#ifdef __cpp_lib_filesystem
+			return filesystem::path(file).filename().string();
+#elif BOOST_FILESYSTEM_FILESYSTEM_HPP
+			return boost::filesystem::path(file).filename().string();
+#endif
+		}
+
 		template<typename Arg, typename ...Args>
 		void log(spdlog::level::level_enum level, std::string file, std::string func, std::size_t line, std::string f, Arg arg, Args&& ...args)
 		{
 			using namespace std;
 			filesystem::path path(file);
 			auto fmts = fmt::format("[{0:>20}] [{1:>20}:{2:>5}] ",
-				path.filename().string().substr(0, 20),
+				get_filename(file).substr(0, 20),
 				func.substr(0, 20),
 				to_string(line).substr(0, 5)
 			) + f;
