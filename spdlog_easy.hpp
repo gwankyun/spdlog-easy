@@ -1,6 +1,6 @@
 #pragma once
-#ifndef SPDLOG_EASY
-#define SPDLOG_EASY
+#ifndef SPDLOG_EASY_HPP
+#define SPDLOG_EASY_HPP
 #include <spdlog/spdlog.h>
 #include <string>
 #include <cstddef>
@@ -59,10 +59,15 @@ namespace spdlog
 		{
 			log(level, file, func, line, "{0}", "");
 		}
+
+		inline void init()
+		{
+			spdlog::set_pattern("[%Y-%m-%d %T.%e] [%^%8l%$] %v");
+		}
 	}
 }
 
 #define LOG(_level, ...) \
 	spdlog::easy::log(spdlog::level::_level, __FILE__,  __func__, __LINE__, ##__VA_ARGS__)
 
-#endif // !SPDLOG_EASY
+#endif // !SPDLOG_EASY_HPP
