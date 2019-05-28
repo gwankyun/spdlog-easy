@@ -5,15 +5,11 @@
 #include <string>
 #include <cstddef>
 
-#ifdef __cpp_lib_filesystem
-#include <filesystem>
-#endif // __cpp_lib_filesystem
-
 namespace spdlog
 {
 	namespace easy
 	{
-		inline char get_path_separator()
+		constexpr char get_path_separator()
 		{
 #ifdef _WIN32
 			return '\\';
@@ -24,15 +20,6 @@ namespace spdlog
 
 		inline std::string get_filename(std::string file)
 		{
-			using namespace std;
-#ifdef __cpp_lib_filesystem
-			return filesystem::path(file).filename().string();
-#endif // __cpp_lib_filesystem
-
-#ifdef BOOST_FILESYSTEM_FILESYSTEM_HPP
-			return boost::filesystem::path(file).filename().string();
-#endif // BOOST_FILESYSTEM_FILESYSTEM_HPP
-
 			return file.substr(file.rfind(get_path_separator()) + 1);
 		}
 
@@ -40,7 +27,6 @@ namespace spdlog
 		void log(spdlog::level::level_enum level, std::string file, std::string func, std::size_t line, std::string f, Arg arg, Args&& ...args)
 		{
 			using namespace std;
-			filesystem::path path(file);
 			auto fmts = fmt::format("[{0:>20}] [{1:>20}:{2:>5}] ",
 				get_filename(file).substr(0, 20),
 				func.substr(0, 20),
