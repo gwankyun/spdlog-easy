@@ -10,6 +10,20 @@ namespace spdlog
 {
 	namespace easy
 	{
+		struct config_t
+		{
+			uint32_t file_size = 20;
+			uint32_t func_size = 20;
+			uint32_t line_size = 5;
+			std::string str;
+		};
+
+		static config_t& get_config()
+		{
+			static config_t instance;
+			return instance;
+		}
+
 		constexpr char get_path_separator()
 		{
 #ifdef _WIN32
@@ -24,15 +38,15 @@ namespace spdlog
 			return file.substr(file.rfind(get_path_separator()) + 1);
 		}
 
-		inline uint32_t file_size = 20;
-		inline uint32_t func_size = 20;
-		inline uint32_t line_size = 5;
-		inline std::string str;
-
 		template<typename Arg, typename ...Args>
 		void log(spdlog::level::level_enum level, std::string file, std::string func, std::size_t line, std::string f, Arg arg, Args&& ...args)
 		{
 			using namespace std;
+			auto& config = get_config();
+			auto& file_size = config.file_size;
+			auto& func_size = config.func_size;
+			auto& line_size = config.line_size;
+			auto& str = config.str;
 			auto fmts = fmt::format(str,
 				get_filename(file).substr(0, file_size),
 				func.substr(0, func_size),
@@ -54,6 +68,11 @@ namespace spdlog
 
 		inline void init()
 		{
+			auto& config = get_config();
+			auto& file_size = config.file_size;
+			auto& func_size = config.func_size;
+			auto& line_size = config.line_size;
+			auto& str = config.str;
 			spdlog::set_pattern("[%Y-%m-%d %T.%e] [%^%8l%$] %v");
 			str = fmt::format("[{{0:>{0}}}] [{{1:>{1}}}:{{2:>{2}}}] ",
 				file_size, func_size, line_size);
