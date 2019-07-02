@@ -12,8 +12,8 @@ namespace spdlog
 	{
 		struct config_t
 		{
-			uint32_t file_size = 20;
-			uint32_t func_size = 20;
+			uint32_t file_size = 15;
+			uint32_t func_size = 10;
 			uint32_t line_size = 5;
 			std::string str;
 		};
@@ -49,8 +49,8 @@ namespace spdlog
 			auto& str = config.str;
 			auto fmts = fmt::format(str,
 				get_filename(file).substr(0, file_size),
-				func.substr(0, func_size),
-				to_string(line).substr(0, line_size)
+				to_string(line).substr(0, line_size),
+				func.substr(0, func_size)
 			) + f;
 			spdlog::default_logger_raw()->log(level, fmts.c_str(), arg, forward<Args>(args)...);
 		}
@@ -74,8 +74,8 @@ namespace spdlog
 			auto& line_size = config.line_size;
 			auto& str = config.str;
 			spdlog::set_pattern("[%Y-%m-%d %T.%e] [%^%8l%$] %v");
-			str = fmt::format("[{{0:>{0}}}] [{{1:>{1}}}:{{2:>{2}}}] ",
-				file_size, func_size, line_size);
+			str = fmt::format("[{{0:<{0}}}] [{{1:>{1}}} {{2:<{2}}}] ",
+				file_size, line_size, func_size);
 		}
 	}
 }
