@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #ifndef SPDLOG_EASY_HPP
 #define SPDLOG_EASY_HPP
 #include <spdlog/spdlog.h>
@@ -74,7 +74,7 @@ namespace spdlog
             auto& line_size = config.line_size;
             auto& str = config.str;
             spdlog::set_pattern("[%Y-%m-%d %T.%e] [%^%8l%$] %v");
-            str = fmt::format("[{{0:<{0}}}] [{{1:>{1}}} {{2:<{2}}}] ",
+            str = fmt::format("[{{0:<{0}}}] [{{2:<{2}}}] [{{1:>{1}}}] ",
                 file_size, line_size, func_size);
         }
     }
