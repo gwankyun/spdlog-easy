@@ -36,7 +36,6 @@
 *.vcxproj
 *.vcxproj.filters
 *.vcxproj.user
-main.cpp
 pch.h
 pch.cpp
 /build
