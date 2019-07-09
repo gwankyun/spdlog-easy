@@ -46,7 +46,8 @@ namespace spdlog
             auto& file_size = config.file_size;
             auto& func_size = config.func_size;
             auto& line_size = config.line_size;
-            auto& str = config.str;
+            auto str = fmt::format("[{{0:<{0}}}] [{{2:<{2}}}] [{{1:>{1}}}] ",
+                file_size, line_size, func_size);
             auto fmts = fmt::format(str,
                 get_filename(file).substr(0, file_size),
                 to_string(line).substr(0, line_size),
@@ -55,8 +56,8 @@ namespace spdlog
             spdlog::default_logger_raw()->log(level, fmts.c_str(), arg, forward<Args>(args)...);
         }
 
-        template<typename t>
-        void log(spdlog::level::level_enum level, std::string file, std::string func, std::size_t line, t t)
+        template<typename T>
+        void log(spdlog::level::level_enum level, std::string file, std::string func, std::size_t line, T t)
         {
             log(level, file, func, line, "{0}", t);
         }
