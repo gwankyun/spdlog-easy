@@ -18,7 +18,7 @@ namespace spdlog
             std::string str;
         };
 
-        static config_t& get_config()
+        inline config_t& get_config()
         {
             static config_t instance;
             return instance;
@@ -46,8 +46,7 @@ namespace spdlog
             auto& file_size = config.file_size;
             auto& func_size = config.func_size;
             auto& line_size = config.line_size;
-            auto str = fmt::format("[{{0:<{0}}}] [{{2:<{2}}}] [{{1:>{1}}}] ",
-                file_size, line_size, func_size);
+            auto& str = config.str;
             auto fmts = fmt::format(str,
                 get_filename(file).substr(0, file_size),
                 to_string(line).substr(0, line_size),
