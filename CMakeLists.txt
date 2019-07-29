@@ -27,7 +27,8 @@ add_definitions(/W4 /MP)
 # 頭文件目錄
 target_include_directories(main
 	PRIVATE 
-        C:/Users/ljqic/Documents/GitHub/spdlog/include
+        # C:/Users/ljqic/Documents/GitHub/spdlog/include
+        third/spdlog/include
         include
 )
 
