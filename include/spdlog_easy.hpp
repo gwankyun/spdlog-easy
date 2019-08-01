@@ -5,6 +5,7 @@
 #include <string>
 #include <cstddef>
 #include <cstdint>
+#include <memory>
 
 namespace spdlog
 {
@@ -44,7 +45,7 @@ namespace spdlog
             const char* file, 
             const char* func, 
             int line, 
-            std::string f, 
+            const char* f, 
             Arg arg, 
             Args&& ...args)
         {
