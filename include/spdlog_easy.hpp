@@ -39,24 +39,40 @@ namespace spdlog
         }
 
         template<typename Arg, typename ...Args>
-        void log(spdlog::level::level_enum level, std::string file, std::string func, int line, std::string f, Arg arg, Args&& ...args)
+        void log(
+            spdlog::level::level_enum level, 
+            const char* file, 
+            const char* func, 
+            int line, 
+            std::string f, 
+            Arg arg, 
+            Args&& ...args)
         {
             using namespace std;
             if (spdlog::default_logger_raw()->should_log(level))
             {
                 spdlog::default_logger_raw()->force_log(
-                    spdlog::source_loc{ file.c_str(), line, func.c_str() },
+                    spdlog::source_loc{ file, line, func },
                     level, f, arg, forward<Args>(args)...);
             }
         }
 
         template<typename T>
-        void log(spdlog::level::level_enum level, std::string file, std::string func, int line, T t)
+        void log(
+            spdlog::level::level_enum level, 
+            const char* file, 
+            const char* func, 
+            int line, 
+            T t)
         {
             log(level, file, func, line, "{0}", t);
         }
 
-        inline void log(spdlog::level::level_enum level, std::string file, std::string func, int line)
+        inline void log(
+            spdlog::level::level_enum level, 
+            const char* file, 
+            const char* func, 
+            int line)
         {
             log(level, file, func, line, "{0}", "");
         }
