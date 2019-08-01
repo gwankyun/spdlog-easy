@@ -6,6 +6,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <memory>
+#include <type_traits>
 
 namespace spdlog
 {
@@ -45,14 +46,35 @@ namespace spdlog
             const char* file, 
             const char* func, 
             int line, 
+            std::shared_ptr<spdlog::logger> logger,
             const char* f, 
             Arg arg, 
             Args&& ...args)
         {
             using namespace std;
-            if (spdlog::default_logger_raw()->should_log(level))
+            if (logger->should_log(level))
             {
-                spdlog::default_logger_raw()->force_log(
+                logger->force_log(
+                    spdlog::source_loc{ file, line, func },
+                    level, f, arg, forward<Args>(args)...);
+            }
+        }
+
+        template<typename Arg, typename ...Args>
+        void log(
+            spdlog::level::level_enum level, 
+            const char* file, 
+            const char* func, 
+            int line, 
+            const char* f, 
+            Arg arg, 
+            Args&& ...args)
+        {
+            using namespace std;
+            auto logger = spdlog::default_logger();
+            if (logger->should_log(level))
+            {
+                logger->force_log(
                     spdlog::source_loc{ file, line, func },
                     level, f, arg, forward<Args>(args)...);
             }
@@ -64,9 +86,32 @@ namespace spdlog
             const char* file, 
             const char* func, 
             int line, 
+            std::shared_ptr<spdlog::logger> logger,
             T t)
         {
-            log(level, file, func, line, "{0}", t);
+            log(level, file, func, line, logger, "{0}", t);
+        }
+
+        template<typename T>
+        void log(
+            spdlog::level::level_enum level, 
+            const char* file, 
+            const char* func, 
+            int line, 
+            T t)
+        {
+            auto logger = spdlog::default_logger();
+            log(level, file, func, line, logger, "{0}", t);
+        }
+
+        inline void log(
+            spdlog::level::level_enum level, 
+            const char* file, 
+            const char* func, 
+            int line,
+            std::shared_ptr<spdlog::logger> logger)
+        {
+            log(level, file, func, line, logger, "{0}", "");
         }
 
         inline void log(
@@ -75,7 +120,8 @@ namespace spdlog
             const char* func, 
             int line)
         {
-            log(level, file, func, line, "{0}", "");
+            auto logger = spdlog::default_logger();
+            log(level, file, func, line, logger, "{0}", "");
         }
 
         inline void init()
