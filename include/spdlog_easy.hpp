@@ -72,12 +72,7 @@ namespace spdlog
         {
             using namespace std;
             auto logger = spdlog::default_logger();
-            if (logger->should_log(level))
-            {
-                logger->force_log(
-                    spdlog::source_loc{ file, line, func },
-                    level, f, arg, forward<Args>(args)...);
-            }
+            log(level, file, func, line, logger, f, arg, forward<Args>(args)...);
         }
 
         template<typename T>
