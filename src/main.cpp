@@ -3,7 +3,7 @@
 
 int main()
 {
-    //spdlog::easy::init();
+    spdlog::easy::init();
     spdlog::set_level(spdlog::level::debug);
     LOG(info);
     LOG(warn, "warn");

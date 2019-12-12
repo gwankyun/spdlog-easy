@@ -1,7 +1,7 @@
 ﻿#pragma once
 #ifndef SPDLOG_EASY_HPP
 #define SPDLOG_EASY_HPP
-#include <spdlog/spdlog.h>
+#include "spdlog/spdlog.h"
 #include <string>
 #include <cstddef>
 #include <cstdint>
@@ -54,7 +54,7 @@ namespace spdlog
             using namespace std;
             if (logger->should_log(level))
             {
-                logger->force_log(
+                logger->log(
                     spdlog::source_loc{ file, line, func },
                     level, f, arg, forward<Args>(args)...);
             }
@@ -121,14 +121,14 @@ namespace spdlog
 
         inline void init()
         {
-            //auto& config = get_config();
-            //auto& file_size = config.file_size;
-            //auto& func_size = config.func_size;
-            //auto& line_size = config.line_size;
-            //auto& str = config.str;
-            //spdlog::set_pattern("[%Y-%m-%d %T.%e] [%^%8l%$] %v");
-            //str = fmt::format("[{{0:<{0}}}] [{{2:<{2}}}] [{{1:>{1}}}] ",
-            //    file_size, line_size, func_size);
+            auto& config = get_config();
+            auto& file_size = config.file_size;
+            auto& func_size = config.func_size;
+            auto& line_size = config.line_size;
+            auto& str = config.str;
+            spdlog::set_pattern("[%Y-%m-%d %T.%e] [%^%8l%$] %v");
+            str = fmt::format("[{{0:<{0}}}] [{{2:<{2}}}] [{{1:>{1}}}] ",
+                file_size, line_size, func_size);
             spdlog::set_pattern("[%Y-%m-%d %T.%e] [%^%8l%$] [%-8s] [%-8!] [%4#] %v");
         }
     }

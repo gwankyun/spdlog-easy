@@ -27,7 +27,7 @@ add_definitions(/W4 /MP)
 # 頭文件目錄
 target_include_directories(main
 	PRIVATE
-        third/spdlog/include
+        # third/spdlog/include
         include
 )
 
