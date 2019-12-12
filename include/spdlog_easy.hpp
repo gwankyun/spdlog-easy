@@ -35,9 +35,36 @@ namespace spdlog
 #endif // _WIN32
         }
 
-        inline std::string get_filename(std::string file)
+        inline std::string get_filename(const std::string& file)
         {
             return file.substr(file.rfind(get_path_separator()) + 1);
+        }
+        
+        inline std::string get_file(const std::string& file))
+        {
+			auto& config = get_config();
+			auto& filename = get_filename(file);
+			if (filename.size() <= config.file_size)
+			{
+				return filename;
+			}
+			else
+			{
+				return filename.substr(0, config.file_size);
+			}
+        }
+        
+		inline std::string get_func(const std::string& func))
+        {
+			auto& config = get_config();
+			if (func.size() <= config.func_size)
+			{
+				return func;
+			}
+			else
+			{
+				return func.substr(0, config.func_size);
+			}
         }
 
         template<typename Arg, typename ...Args>
@@ -54,9 +81,9 @@ namespace spdlog
             using namespace std;
             if (logger->should_log(level))
             {
-                logger->log(
-                    spdlog::source_loc{ file, line, func },
-                    level, f, arg, forward<Args>(args)...);
+				auto base = fmt::format(get_config().str, get_file(file), get_func(func), line);
+				auto str = fmt::format("{0} {1}", base, f);
+				logger->log(level, str, arg, forward<Args>(args)...);
             }
         }
 
@@ -127,9 +154,8 @@ namespace spdlog
             auto& line_size = config.line_size;
             auto& str = config.str;
             spdlog::set_pattern("[%Y-%m-%d %T.%e] [%^%8l%$] %v");
-            str = fmt::format("[{{0:<{0}}}] [{{2:<{2}}}] [{{1:>{1}}}] ",
-                file_size, line_size, func_size);
-            spdlog::set_pattern("[%Y-%m-%d %T.%e] [%^%8l%$] [%-8s] [%-8!] [%4#] %v");
+            str = fmt::format("[{{0:<{0}}}] [{{1:<{1}}}] [{{2:>{2}}}] ",
+                file_size, func_size, line_size);;
         }
     }
 }
