@@ -1,4 +1,4 @@
-﻿#include <spdlog_easy.hpp>
+﻿#include <spdlog_easy/spdlog_easy.hpp>
 #include <spdlog/sinks/stdout_color_sinks.h>
 
 int main()

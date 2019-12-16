@@ -1,0 +1,4 @@
+﻿if(SPDLOG_EASY_ROOT)
+    set(SPDLOG_EASY_INCLUDE_DIR ${SPDLOG_EASY_ROOT}/include)
+    set(SPDLOG_EASY_FOUND TRUE)
+endif()
