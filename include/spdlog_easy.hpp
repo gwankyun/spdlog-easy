@@ -40,7 +40,7 @@ namespace spdlog
             return file.substr(file.rfind(get_path_separator()) + 1);
         }
         
-        inline std::string get_file(const std::string& file))
+        inline std::string get_file(const std::string& file)
         {
 			auto& config = get_config();
 			auto& filename = get_filename(file);
@@ -54,7 +54,7 @@ namespace spdlog
 			}
         }
         
-		inline std::string get_func(const std::string& func))
+		inline std::string get_func(const std::string& func)
         {
 			auto& config = get_config();
 			if (func.size() <= config.func_size)
