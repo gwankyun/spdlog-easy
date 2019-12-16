@@ -43,7 +43,7 @@ namespace spdlog
         inline std::string get_file(const std::string& file)
         {
 			auto& config = get_config();
-			auto& filename = get_filename(file);
+			auto filename = get_filename(file);
 			if (filename.size() <= config.file_size)
 			{
 				return filename;
