@@ -1,5 +1,15 @@
 # spdlog-easy
 
+CMake
+
+```cmake
+set(SPDLOG_EASY_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
+find_package(SPDLOG_EASY)
+if(SPDLOG_EASY_FOUND)
+    cmake_print_variables(SPDLOG_EASY_INCLUDE_DIR)
+endif()
+```
+
 用法
 
 ```c++
