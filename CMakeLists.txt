@@ -1,5 +1,5 @@
 ﻿# cmake最低版本
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.16)
 
 # 啟用IDE目錄功能
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -36,15 +36,5 @@ add_definitions(/W4 /MP)
 # 頭文件目錄
 target_include_directories(main
 	PRIVATE
-        # third/spdlog/include
         ${SPDLOG_EASY_INCLUDE_DIR}
 )
-
-# target_link_directories(main
-#     PRIVATE
-#         C:/local/boost_1_70_0/lib64-msvc-14.2
-# )
-
-# target_link_libraries(main
-#     libboost_date_time-vc142-mt-gd-x64-1_70
-# )
