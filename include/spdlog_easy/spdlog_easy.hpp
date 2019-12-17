@@ -42,8 +42,8 @@ namespace spdlog
         
         inline std::string get_file(const std::string& file)
         {
-			auto& config = get_config();
-			auto filename = get_filename(file);
+			auto&& config = get_config();
+			auto&& filename = get_filename(file);
 			if (filename.size() <= config.file_size)
 			{
 				return filename;
@@ -56,7 +56,7 @@ namespace spdlog
         
 		inline std::string get_func(const std::string& func)
         {
-			auto& config = get_config();
+			auto&& config = get_config();
 			if (func.size() <= config.func_size)
 			{
 				return func;
@@ -81,8 +81,8 @@ namespace spdlog
             using namespace std;
             if (logger->should_log(level))
             {
-				auto base = fmt::format(get_config().str, get_file(file), get_func(func), line);
-				auto str = fmt::format("{0} {1}", base, f);
+				auto&& base = fmt::format(get_config().str, get_file(file), get_func(func), line);
+				auto&& str = fmt::format("{0} {1}", base, f);
 				logger->log(level, str, arg, forward<Args>(args)...);
             }
         }
@@ -98,7 +98,7 @@ namespace spdlog
             Args&& ...args)
         {
             using namespace std;
-            auto logger = spdlog::default_logger();
+            auto&& logger = spdlog::default_logger();
             log(level, file, func, line, logger, f, arg, forward<Args>(args)...);
         }
 
@@ -122,7 +122,7 @@ namespace spdlog
             int line, 
             T t)
         {
-            auto logger = spdlog::default_logger();
+            auto&& logger = spdlog::default_logger();
             log(level, file, func, line, logger, "{0}", t);
         }
 
@@ -142,17 +142,17 @@ namespace spdlog
             const char* func, 
             int line)
         {
-            auto logger = spdlog::default_logger();
+            auto&& logger = spdlog::default_logger();
             log(level, file, func, line, logger, "{0}", "");
         }
 
         inline void init()
         {
-            auto& config = get_config();
-            auto& file_size = config.file_size;
-            auto& func_size = config.func_size;
-            auto& line_size = config.line_size;
-            auto& str = config.str;
+            auto&& config = get_config();
+            auto&& file_size = config.file_size;
+            auto&& func_size = config.func_size;
+            auto&& line_size = config.line_size;
+            auto&& str = config.str;
             spdlog::set_pattern("[%Y-%m-%d %T.%e] [%^%8l%$] %v");
             str = fmt::format("[{{0:<{0}}}] [{{1:<{1}}}] [{{2:>{2}}}] ",
                 file_size, func_size, line_size);;
