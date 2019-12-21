@@ -14,6 +14,38 @@ namespace spdlog
     {
         struct config_t
         {
+            config_t()
+            {
+                update();
+            }
+
+            void update()
+            {
+                if (pattern.empty())
+                {
+                    spdlog::set_pattern("[%Y-%m-%d %T.%e] [%^%8l%$] %v");
+                }
+                else
+                {
+                    spdlog::set_pattern(pattern + " %v");
+                }
+                str = fmt::format("[{{0:<{0}}}] [{{1:<{1}}}] [{{2:>{2}}}] ",
+                    file_size, func_size, line_size);;
+            }
+
+            friend std::string get_file(const std::string& file);
+            friend std::string get_func(const std::string& func);
+            friend void set_file(uint32_t file_size);
+            friend inline void set_func(uint32_t func_size);
+            friend void set_pattern(const std::string& pattern);
+            friend void set_line(uint32_t line_size);
+
+            std::string get_str()
+            {
+                return str;
+            }
+
+        private:
             uint32_t file_size = 15;
             uint32_t func_size = 10;
             uint32_t line_size = 5;
@@ -82,7 +114,7 @@ namespace spdlog
             using namespace std;
             if (logger->should_log(level))
             {
-				auto&& base = fmt::format(get_config().str, get_file(file), get_func(func), line);
+				auto&& base = fmt::format(get_config().get_str(), get_file(file), get_func(func), line);
 				auto&& str = fmt::format("{0} {1}", base, f);
 				logger->log(level, str, arg, forward<Args>(args)...);
             }
@@ -167,24 +199,9 @@ namespace spdlog
             get_config().line_size = line_size;
         }
 
-        inline void init()
+        inline void config()
         {
-            using namespace std;
-            auto&& config = get_config();
-            auto&& file_size = config.file_size;
-            auto&& func_size = config.func_size;
-            auto&& line_size = config.line_size;
-            auto&& str = config.str;
-            if (config.pattern.empty())
-            {
-                spdlog::set_pattern("[%Y-%m-%d %T.%e] [%^%8l%$] %v");
-            }
-            else
-            {
-                spdlog::set_pattern(string(config.pattern) + " %v");
-            }
-            str = fmt::format("[{{0:<{0}}}] [{{1:<{1}}}] [{{2:>{2}}}] ",
-                file_size, func_size, line_size);;
+            get_config().update();
         }
     }
 }

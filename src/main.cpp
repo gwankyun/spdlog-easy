@@ -5,7 +5,7 @@ int main()
 {
     spdlog::easy::set_pattern("[%^%8l%$]");
     spdlog::easy::set_line(3);
-    spdlog::easy::init();
+    spdlog::easy::config();
     spdlog::set_level(spdlog::level::debug);
     LOG(info);
     LOG(warn, "warn");
