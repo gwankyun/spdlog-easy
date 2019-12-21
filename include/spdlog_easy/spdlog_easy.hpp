@@ -152,6 +152,21 @@ namespace spdlog
             get_config().pattern = pattern;
         }
 
+        inline void set_file(uint32_t file_size)
+        {
+            get_config().file_size = file_size;
+        }
+
+        inline void set_func(uint32_t func_size)
+        {
+            get_config().func_size = func_size;
+        }
+
+        inline void set_line(uint32_t line_size)
+        {
+            get_config().line_size = line_size;
+        }
+
         inline void init()
         {
             using namespace std;
