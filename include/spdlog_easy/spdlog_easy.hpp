@@ -17,6 +17,7 @@ namespace spdlog
             uint32_t file_size = 15;
             uint32_t func_size = 10;
             uint32_t line_size = 5;
+            std::string pattern;
             std::string str;
         };
 
@@ -146,14 +147,27 @@ namespace spdlog
             log(level, file, func, line, logger, "{0}", "");
         }
 
+        inline void set_pattern(const std::string& pattern)
+        {
+            get_config().pattern = pattern;
+        }
+
         inline void init()
         {
+            using namespace std;
             auto&& config = get_config();
             auto&& file_size = config.file_size;
             auto&& func_size = config.func_size;
             auto&& line_size = config.line_size;
             auto&& str = config.str;
-            spdlog::set_pattern("[%Y-%m-%d %T.%e] [%^%8l%$] %v");
+            if (config.pattern.empty())
+            {
+                spdlog::set_pattern("[%Y-%m-%d %T.%e] [%^%8l%$] %v");
+            }
+            else
+            {
+                spdlog::set_pattern(string(config.pattern) + " %v");
+            }
             str = fmt::format("[{{0:<{0}}}] [{{1:<{1}}}] [{{2:>{2}}}] ",
                 file_size, func_size, line_size);;
         }

@@ -3,6 +3,7 @@
 
 int main()
 {
+    spdlog::easy::set_pattern("[%^%8l%$]");
     spdlog::easy::init();
     spdlog::set_level(spdlog::level::debug);
     LOG(info);
