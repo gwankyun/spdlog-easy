@@ -1,5 +1,5 @@
 ﻿# cmake最低版本
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.17)
 
 # 啟用IDE目錄功能
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -18,10 +18,10 @@ project(spdlog_easy)
 # 生成執行文件
 add_executable(main "")
 
-set(SPDLOG_EASY_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
+set(Spdlog_easy_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
 find_package(SPDLOG_EASY)
-if(SPDLOG_EASY_FOUND)
-    cmake_print_variables(SPDLOG_EASY_INCLUDE_DIR)
+if(Spdlog_easy_FOUND)
+    cmake_print_variables(Spdlog_easy_INCLUDE_DIR)
 endif()
 
 target_sources(main 
@@ -36,5 +36,5 @@ add_definitions(/W4 /MP)
 # 頭文件目錄
 target_include_directories(main
 	PRIVATE
-        ${SPDLOG_EASY_INCLUDE_DIR}
+        ${Spdlog_easy_INCLUDE_DIR}
 )

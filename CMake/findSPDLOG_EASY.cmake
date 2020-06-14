@@ -1,4 +1,4 @@
-﻿if(SPDLOG_EASY_ROOT)
-    set(SPDLOG_EASY_INCLUDE_DIR ${SPDLOG_EASY_ROOT}/include)
-    set(SPDLOG_EASY_FOUND TRUE)
+﻿if(Spdlog_easy_ROOT)
+    set(Spdlog_easy_INCLUDE_DIR ${Spdlog_easy_ROOT}/include)
+    set(Spdlog_easy_FOUND TRUE)
 endif()
