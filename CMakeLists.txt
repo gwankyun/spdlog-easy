@@ -19,7 +19,7 @@ project(spdlog_easy)
 add_executable(main "")
 
 set(Spdlog_easy_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
-find_package(SPDLOG_EASY)
+find_package(Spdlog_easy)
 if(Spdlog_easy_FOUND)
     cmake_print_variables(Spdlog_easy_INCLUDE_DIR)
 endif()
