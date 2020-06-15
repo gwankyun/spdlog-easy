@@ -3,10 +3,10 @@
 CMake
 
 ```cmake
-set(SPDLOG_EASY_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
-find_package(SPDLOG_EASY)
-if(SPDLOG_EASY_FOUND)
-    cmake_print_variables(SPDLOG_EASY_INCLUDE_DIR)
+set(Spdlog_easy_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
+find_package(Spdlog_easy)
+if(Spdlog_easy_FOUND)
+    cmake_print_variables(Spdlog_easy_INCLUDE_DIR)
 endif()
 ```
 
