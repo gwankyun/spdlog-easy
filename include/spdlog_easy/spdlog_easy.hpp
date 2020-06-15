@@ -3,15 +3,29 @@
 #define SPDLOG_EASY_HPP
 #include "spdlog/spdlog.h"
 #include <string>
-#include <cstddef>
-#include <cstdint>
-#include <memory>
-#include <type_traits>
+#include <cstdint> // uint_least32_t
+#include <memory> // shared_ptr
+#include "source_location/source_location.hpp"
+
+#ifdef __has_include
+#if __has_include(<source_location>)
+#include <source_location>
+#ifndef STD_SOURCE_LOCATION
+#define STD_SOURCE_LOCATION
+#endif // !STD_SOURCE_LOCATION
+#endif
+#endif
 
 namespace spdlog
 {
     namespace easy
     {
+#ifdef STD_SOURCE_LOCATION
+        typedef std::source_location source_location;
+#else
+        typedef upward::source_location source_location;
+#endif // STD_SOURCE_LOCATION
+
         struct config_t
         {
             config_t()
@@ -72,111 +86,100 @@ namespace spdlog
         {
             return file.substr(file.rfind(get_path_separator()) + 1);
         }
-        
+
         inline std::string get_file(const std::string& file)
         {
-			auto&& config = get_config();
-			auto&& filename = get_filename(file);
-			if (filename.size() <= config.file_size)
-			{
-				return filename;
-			}
-			else
-			{
-				return filename.substr(0, config.file_size);
-			}
-        }
-        
-		inline std::string get_func(const std::string& func)
-        {
-			auto&& config = get_config();
-			if (func.size() <= config.func_size)
-			{
-				return func;
-			}
-			else
-			{
-				return func.substr(0, config.func_size);
-			}
+            auto&& config = get_config();
+            auto&& filename = get_filename(file);
+            if (filename.size() <= config.file_size)
+            {
+                return filename;
+            }
+            else
+            {
+                return filename.substr(0, config.file_size);
+            }
         }
 
-        template<typename Arg, typename ...Args>
-        void log(
-            spdlog::level::level_enum level, 
-            const char* file, 
-            const char* func, 
-            int line, 
-            std::shared_ptr<spdlog::logger> logger,
-            const char* f, 
-            Arg arg, 
-            Args&& ...args)
+        inline std::string get_func(const std::string& func)
         {
-            using namespace std;
-            if (logger->should_log(level))
+            auto&& config = get_config();
+            if (func.size() <= config.func_size)
             {
-				auto&& base = fmt::format(get_config().get_str(), get_file(file), get_func(func), line);
-				auto&& str = fmt::format("{0} {1}", base, f);
-				logger->log(level, str, arg, forward<Args>(args)...);
+                return func;
+            }
+            else
+            {
+                return func.substr(0, config.func_size);
             }
         }
 
         template<typename Arg, typename ...Args>
         void log(
-            spdlog::level::level_enum level, 
-            const char* file, 
-            const char* func, 
-            int line, 
-            const char* f, 
-            Arg arg, 
+            spdlog::level::level_enum level,
+            const source_location& location,
+            std::shared_ptr<spdlog::logger> logger,
+            const char* f,
+            Arg arg,
+            Args&& ...args)
+        {
+            using namespace std;
+            if (logger->should_log(level))
+            {
+                auto&& base = fmt::format(get_config().get_str(),
+                    get_file(location.file_name()), get_func(location.function_name()), location.line());
+                auto&& str = fmt::format("{0} {1}", base, f);
+                logger->log(level, str, arg, forward<Args>(args)...);
+            }
+        }
+
+        template<typename Arg, typename ...Args>
+        void log(
+            spdlog::level::level_enum level,
+            const source_location& location,
+            const char* f,
+            Arg arg,
             Args&& ...args)
         {
             using namespace std;
             auto&& logger = spdlog::default_logger();
-            log(level, file, func, line, logger, f, arg, forward<Args>(args)...);
+            log(level, location, logger, f, arg, forward<Args>(args)...);
         }
 
         template<typename T>
         void log(
-            spdlog::level::level_enum level, 
-            const char* file, 
-            const char* func, 
-            int line, 
+            spdlog::level::level_enum level,
+            const source_location& location,
             std::shared_ptr<spdlog::logger> logger,
             T t)
         {
-            log(level, file, func, line, logger, "{0}", t);
+            log(level, location, logger, "{0}", t);
         }
 
         template<typename T>
         void log(
-            spdlog::level::level_enum level, 
-            const char* file, 
-            const char* func, 
-            int line, 
+            spdlog::level::level_enum level,
+            const source_location& location,
             T t)
         {
             auto&& logger = spdlog::default_logger();
-            log(level, file, func, line, logger, "{0}", t);
+            log(level, location, logger, "{0}", t);
         }
 
         inline void log(
-            spdlog::level::level_enum level, 
-            const char* file, 
-            const char* func, 
-            int line,
+            spdlog::level::level_enum level,
+            const source_location& location,
             std::shared_ptr<spdlog::logger> logger)
         {
-            log(level, file, func, line, logger, "{0}", "");
+            log(level, location, logger, "{0}", "");
         }
 
         inline void log(
-            spdlog::level::level_enum level, 
-            const char* file, 
-            const char* func, 
-            int line)
+            spdlog::level::level_enum level,
+            const source_location& location)
         {
             auto&& logger = spdlog::default_logger();
-            log(level, file, func, line, logger, "{0}", "");
+            log(level, location, logger, "{0}", "");
         }
 
         inline void set_pattern(const std::string& pattern)
@@ -206,7 +209,12 @@ namespace spdlog
     }
 }
 
+#ifdef STD_SOURCE_LOCATION
 #define LOG(_level, ...) \
-	spdlog::easy::log(spdlog::level::_level, __FILE__,  __func__, __LINE__, ##__VA_ARGS__)
+    spdlog::easy::log(spdlog::level::_level, std::source_location::current(), ##__VA_ARGS__)
+#else
+#define LOG(_level, ...) \
+    spdlog::easy::log(spdlog::level::_level, SOURCE_LOCATION_CURRENT(), ##__VA_ARGS__)
+#endif // STD_SOURCE_LOCATION
 
 #endif // !SPDLOG_EASY_HPP
